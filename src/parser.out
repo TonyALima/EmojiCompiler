@@ -1,0 +1,1545 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    COMMA
+    DOT
+    ELSE
+    LBRACKET
+    NOT
+    RBRACKET
+    SQUOTE
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> INT MAIN LPAREN RPAREN bloco
+Rule 2     comando -> declaration
+Rule 3     comando -> if_statement
+Rule 4     comando -> while_statement
+Rule 5     comando -> for_statement
+Rule 6     comando -> break_statement
+Rule 7     comando -> continue_statement
+Rule 8     comando -> return_statement
+Rule 9     type -> INT
+Rule 10    type -> FLOAT
+Rule 11    type -> CHAR
+Rule 12    type -> VOID
+Rule 13    type -> BOOL
+Rule 14    operador -> MULTIPLY
+Rule 15    operador -> DIV
+Rule 16    operador -> MOD
+Rule 17    operador -> PLUS
+Rule 18    operador -> MINUS
+Rule 19    operador -> EQUAL
+Rule 20    operador -> NEQUAL
+Rule 21    operador -> GT
+Rule 22    operador -> LT
+Rule 23    operador -> GTE
+Rule 24    operador -> LTE
+Rule 25    operador -> AND
+Rule 26    operador -> OR
+Rule 27    boolean -> TRUE
+Rule 28    boolean -> FALSE
+Rule 29    valor -> NUMBER
+Rule 30    valor -> CHARACTER
+Rule 31    valor -> boolean
+Rule 32    valor -> operation
+Rule 33    valor -> parentheses
+Rule 34    operation -> valor operador valor
+Rule 35    assignment -> NOME valor
+Rule 36    declare -> type NOME valor
+Rule 37    declaration -> type NOME ASSIGN valor SEMICOLON
+Rule 38    declaration -> type NOME SEMICOLON
+Rule 39    parentheses -> LPAREN valor RPAREN
+Rule 40    bloco -> LBRACE comando RBRACE
+Rule 41    bloco -> LBRACE RBRACE
+Rule 42    if_statement -> IF LPAREN valor RPAREN LBRACE bloco RBRACE
+Rule 43    while_statement -> WHILE LPAREN valor RPAREN LBRACE bloco RBRACE
+Rule 44    for_statement -> FOR LPAREN assignment_or_declaration_or_value SEMICOLON assignment_or_value SEMICOLON assignment_or_value RPAREN comando
+Rule 45    assignment_or_declaration_or_value -> assignment
+Rule 46    assignment_or_declaration_or_value -> declaration
+Rule 47    assignment_or_declaration_or_value -> valor
+Rule 48    assignment_or_value -> assignment
+Rule 49    assignment_or_value -> valor
+Rule 50    scanf_statement -> SCANF LPAREN NOME RPAREN SEMICOLON
+Rule 51    printf_statement -> PRINTF LPAREN valor RPAREN SEMICOLON
+Rule 52    break_statement -> BREAK SEMICOLON
+Rule 53    continue_statement -> CONTINUE SEMICOLON
+Rule 54    return_statement -> RETURN valor SEMICOLON
+
+Terminals, with rules where they appear
+
+AND                  : 25
+ASSIGN               : 37
+BOOL                 : 13
+BREAK                : 52
+CHAR                 : 11
+CHARACTER            : 30
+COMMA                : 
+CONTINUE             : 53
+DIV                  : 15
+DOT                  : 
+ELSE                 : 
+EQUAL                : 19
+FALSE                : 28
+FLOAT                : 10
+FOR                  : 44
+GT                   : 21
+GTE                  : 23
+IF                   : 42
+INT                  : 1 9
+LBRACE               : 40 41 42 43
+LBRACKET             : 
+LPAREN               : 1 39 42 43 44 50 51
+LT                   : 22
+LTE                  : 24
+MAIN                 : 1
+MINUS                : 18
+MOD                  : 16
+MULTIPLY             : 14
+NEQUAL               : 20
+NOME                 : 35 36 37 38 50
+NOT                  : 
+NUMBER               : 29
+OR                   : 26
+PLUS                 : 17
+PRINTF               : 51
+RBRACE               : 40 41 42 43
+RBRACKET             : 
+RETURN               : 54
+RPAREN               : 1 39 42 43 44 50 51
+SCANF                : 50
+SEMICOLON            : 37 38 44 44 50 51 52 53 54
+SQUOTE               : 
+TRUE                 : 27
+VOID                 : 12
+WHILE                : 43
+error                : 
+
+Nonterminals, with rules where they appear
+
+assignment           : 45 48
+assignment_or_declaration_or_value : 44
+assignment_or_value  : 44 44
+bloco                : 1 42 43
+boolean              : 31
+break_statement      : 6
+comando              : 40 44
+continue_statement   : 7
+declaration          : 2 46
+declare              : 
+for_statement        : 5
+if_statement         : 3
+operador             : 34
+operation            : 32
+parentheses          : 33
+printf_statement     : 
+program              : 0
+return_statement     : 8
+scanf_statement      : 
+type                 : 36 37 38
+valor                : 34 34 35 36 37 39 42 43 47 49 51 54
+while_statement      : 4
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . INT MAIN LPAREN RPAREN bloco
+
+    INT             shift and go to state 2
+
+    program                        shift and go to state 1
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> INT . MAIN LPAREN RPAREN bloco
+
+    MAIN            shift and go to state 3
+
+
+state 3
+
+    (1) program -> INT MAIN . LPAREN RPAREN bloco
+
+    LPAREN          shift and go to state 4
+
+
+state 4
+
+    (1) program -> INT MAIN LPAREN . RPAREN bloco
+
+    RPAREN          shift and go to state 5
+
+
+state 5
+
+    (1) program -> INT MAIN LPAREN RPAREN . bloco
+    (40) bloco -> . LBRACE comando RBRACE
+    (41) bloco -> . LBRACE RBRACE
+
+    LBRACE          shift and go to state 7
+
+    bloco                          shift and go to state 6
+
+state 6
+
+    (1) program -> INT MAIN LPAREN RPAREN bloco .
+
+    $end            reduce using rule 1 (program -> INT MAIN LPAREN RPAREN bloco .)
+
+
+state 7
+
+    (40) bloco -> LBRACE . comando RBRACE
+    (41) bloco -> LBRACE . RBRACE
+    (2) comando -> . declaration
+    (3) comando -> . if_statement
+    (4) comando -> . while_statement
+    (5) comando -> . for_statement
+    (6) comando -> . break_statement
+    (7) comando -> . continue_statement
+    (8) comando -> . return_statement
+    (37) declaration -> . type NOME ASSIGN valor SEMICOLON
+    (38) declaration -> . type NOME SEMICOLON
+    (42) if_statement -> . IF LPAREN valor RPAREN LBRACE bloco RBRACE
+    (43) while_statement -> . WHILE LPAREN valor RPAREN LBRACE bloco RBRACE
+    (44) for_statement -> . FOR LPAREN assignment_or_declaration_or_value SEMICOLON assignment_or_value SEMICOLON assignment_or_value RPAREN comando
+    (52) break_statement -> . BREAK SEMICOLON
+    (53) continue_statement -> . CONTINUE SEMICOLON
+    (54) return_statement -> . RETURN valor SEMICOLON
+    (9) type -> . INT
+    (10) type -> . FLOAT
+    (11) type -> . CHAR
+    (12) type -> . VOID
+    (13) type -> . BOOL
+
+    RBRACE          shift and go to state 9
+    IF              shift and go to state 18
+    WHILE           shift and go to state 19
+    FOR             shift and go to state 20
+    BREAK           shift and go to state 21
+    CONTINUE        shift and go to state 22
+    RETURN          shift and go to state 23
+    INT             shift and go to state 24
+    FLOAT           shift and go to state 25
+    CHAR            shift and go to state 26
+    VOID            shift and go to state 27
+    BOOL            shift and go to state 28
+
+    comando                        shift and go to state 8
+    declaration                    shift and go to state 10
+    if_statement                   shift and go to state 11
+    while_statement                shift and go to state 12
+    for_statement                  shift and go to state 13
+    break_statement                shift and go to state 14
+    continue_statement             shift and go to state 15
+    return_statement               shift and go to state 16
+    type                           shift and go to state 17
+
+state 8
+
+    (40) bloco -> LBRACE comando . RBRACE
+
+    RBRACE          shift and go to state 29
+
+
+state 9
+
+    (41) bloco -> LBRACE RBRACE .
+
+    $end            reduce using rule 41 (bloco -> LBRACE RBRACE .)
+    RBRACE          reduce using rule 41 (bloco -> LBRACE RBRACE .)
+
+
+state 10
+
+    (2) comando -> declaration .
+
+    RBRACE          reduce using rule 2 (comando -> declaration .)
+
+
+state 11
+
+    (3) comando -> if_statement .
+
+    RBRACE          reduce using rule 3 (comando -> if_statement .)
+
+
+state 12
+
+    (4) comando -> while_statement .
+
+    RBRACE          reduce using rule 4 (comando -> while_statement .)
+
+
+state 13
+
+    (5) comando -> for_statement .
+
+    RBRACE          reduce using rule 5 (comando -> for_statement .)
+
+
+state 14
+
+    (6) comando -> break_statement .
+
+    RBRACE          reduce using rule 6 (comando -> break_statement .)
+
+
+state 15
+
+    (7) comando -> continue_statement .
+
+    RBRACE          reduce using rule 7 (comando -> continue_statement .)
+
+
+state 16
+
+    (8) comando -> return_statement .
+
+    RBRACE          reduce using rule 8 (comando -> return_statement .)
+
+
+state 17
+
+    (37) declaration -> type . NOME ASSIGN valor SEMICOLON
+    (38) declaration -> type . NOME SEMICOLON
+
+    NOME            shift and go to state 30
+
+
+state 18
+
+    (42) if_statement -> IF . LPAREN valor RPAREN LBRACE bloco RBRACE
+
+    LPAREN          shift and go to state 31
+
+
+state 19
+
+    (43) while_statement -> WHILE . LPAREN valor RPAREN LBRACE bloco RBRACE
+
+    LPAREN          shift and go to state 32
+
+
+state 20
+
+    (44) for_statement -> FOR . LPAREN assignment_or_declaration_or_value SEMICOLON assignment_or_value SEMICOLON assignment_or_value RPAREN comando
+
+    LPAREN          shift and go to state 33
+
+
+state 21
+
+    (52) break_statement -> BREAK . SEMICOLON
+
+    SEMICOLON       shift and go to state 34
+
+
+state 22
+
+    (53) continue_statement -> CONTINUE . SEMICOLON
+
+    SEMICOLON       shift and go to state 35
+
+
+state 23
+
+    (54) return_statement -> RETURN . valor SEMICOLON
+    (29) valor -> . NUMBER
+    (30) valor -> . CHARACTER
+    (31) valor -> . boolean
+    (32) valor -> . operation
+    (33) valor -> . parentheses
+    (27) boolean -> . TRUE
+    (28) boolean -> . FALSE
+    (34) operation -> . valor operador valor
+    (39) parentheses -> . LPAREN valor RPAREN
+
+    NUMBER          shift and go to state 37
+    CHARACTER       shift and go to state 38
+    TRUE            shift and go to state 42
+    FALSE           shift and go to state 43
+    LPAREN          shift and go to state 44
+
+    valor                          shift and go to state 36
+    boolean                        shift and go to state 39
+    operation                      shift and go to state 40
+    parentheses                    shift and go to state 41
+
+state 24
+
+    (9) type -> INT .
+
+    NOME            reduce using rule 9 (type -> INT .)
+
+
+state 25
+
+    (10) type -> FLOAT .
+
+    NOME            reduce using rule 10 (type -> FLOAT .)
+
+
+state 26
+
+    (11) type -> CHAR .
+
+    NOME            reduce using rule 11 (type -> CHAR .)
+
+
+state 27
+
+    (12) type -> VOID .
+
+    NOME            reduce using rule 12 (type -> VOID .)
+
+
+state 28
+
+    (13) type -> BOOL .
+
+    NOME            reduce using rule 13 (type -> BOOL .)
+
+
+state 29
+
+    (40) bloco -> LBRACE comando RBRACE .
+
+    $end            reduce using rule 40 (bloco -> LBRACE comando RBRACE .)
+    RBRACE          reduce using rule 40 (bloco -> LBRACE comando RBRACE .)
+
+
+state 30
+
+    (37) declaration -> type NOME . ASSIGN valor SEMICOLON
+    (38) declaration -> type NOME . SEMICOLON
+
+    ASSIGN          shift and go to state 45
+    SEMICOLON       shift and go to state 46
+
+
+state 31
+
+    (42) if_statement -> IF LPAREN . valor RPAREN LBRACE bloco RBRACE
+    (29) valor -> . NUMBER
+    (30) valor -> . CHARACTER
+    (31) valor -> . boolean
+    (32) valor -> . operation
+    (33) valor -> . parentheses
+    (27) boolean -> . TRUE
+    (28) boolean -> . FALSE
+    (34) operation -> . valor operador valor
+    (39) parentheses -> . LPAREN valor RPAREN
+
+    NUMBER          shift and go to state 37
+    CHARACTER       shift and go to state 38
+    TRUE            shift and go to state 42
+    FALSE           shift and go to state 43
+    LPAREN          shift and go to state 44
+
+    valor                          shift and go to state 47
+    boolean                        shift and go to state 39
+    operation                      shift and go to state 40
+    parentheses                    shift and go to state 41
+
+state 32
+
+    (43) while_statement -> WHILE LPAREN . valor RPAREN LBRACE bloco RBRACE
+    (29) valor -> . NUMBER
+    (30) valor -> . CHARACTER
+    (31) valor -> . boolean
+    (32) valor -> . operation
+    (33) valor -> . parentheses
+    (27) boolean -> . TRUE
+    (28) boolean -> . FALSE
+    (34) operation -> . valor operador valor
+    (39) parentheses -> . LPAREN valor RPAREN
+
+    NUMBER          shift and go to state 37
+    CHARACTER       shift and go to state 38
+    TRUE            shift and go to state 42
+    FALSE           shift and go to state 43
+    LPAREN          shift and go to state 44
+
+    valor                          shift and go to state 48
+    boolean                        shift and go to state 39
+    operation                      shift and go to state 40
+    parentheses                    shift and go to state 41
+
+state 33
+
+    (44) for_statement -> FOR LPAREN . assignment_or_declaration_or_value SEMICOLON assignment_or_value SEMICOLON assignment_or_value RPAREN comando
+    (45) assignment_or_declaration_or_value -> . assignment
+    (46) assignment_or_declaration_or_value -> . declaration
+    (47) assignment_or_declaration_or_value -> . valor
+    (35) assignment -> . NOME valor
+    (37) declaration -> . type NOME ASSIGN valor SEMICOLON
+    (38) declaration -> . type NOME SEMICOLON
+    (29) valor -> . NUMBER
+    (30) valor -> . CHARACTER
+    (31) valor -> . boolean
+    (32) valor -> . operation
+    (33) valor -> . parentheses
+    (9) type -> . INT
+    (10) type -> . FLOAT
+    (11) type -> . CHAR
+    (12) type -> . VOID
+    (13) type -> . BOOL
+    (27) boolean -> . TRUE
+    (28) boolean -> . FALSE
+    (34) operation -> . valor operador valor
+    (39) parentheses -> . LPAREN valor RPAREN
+
+    NOME            shift and go to state 53
+    NUMBER          shift and go to state 37
+    CHARACTER       shift and go to state 38
+    INT             shift and go to state 24
+    FLOAT           shift and go to state 25
+    CHAR            shift and go to state 26
+    VOID            shift and go to state 27
+    BOOL            shift and go to state 28
+    TRUE            shift and go to state 42
+    FALSE           shift and go to state 43
+    LPAREN          shift and go to state 44
+
+    assignment_or_declaration_or_value shift and go to state 49
+    assignment                     shift and go to state 50
+    declaration                    shift and go to state 51
+    valor                          shift and go to state 52
+    type                           shift and go to state 17
+    boolean                        shift and go to state 39
+    operation                      shift and go to state 40
+    parentheses                    shift and go to state 41
+
+state 34
+
+    (52) break_statement -> BREAK SEMICOLON .
+
+    RBRACE          reduce using rule 52 (break_statement -> BREAK SEMICOLON .)
+
+
+state 35
+
+    (53) continue_statement -> CONTINUE SEMICOLON .
+
+    RBRACE          reduce using rule 53 (continue_statement -> CONTINUE SEMICOLON .)
+
+
+state 36
+
+    (54) return_statement -> RETURN valor . SEMICOLON
+    (34) operation -> valor . operador valor
+    (14) operador -> . MULTIPLY
+    (15) operador -> . DIV
+    (16) operador -> . MOD
+    (17) operador -> . PLUS
+    (18) operador -> . MINUS
+    (19) operador -> . EQUAL
+    (20) operador -> . NEQUAL
+    (21) operador -> . GT
+    (22) operador -> . LT
+    (23) operador -> . GTE
+    (24) operador -> . LTE
+    (25) operador -> . AND
+    (26) operador -> . OR
+
+    SEMICOLON       shift and go to state 54
+    MULTIPLY        shift and go to state 56
+    DIV             shift and go to state 57
+    MOD             shift and go to state 58
+    PLUS            shift and go to state 59
+    MINUS           shift and go to state 60
+    EQUAL           shift and go to state 61
+    NEQUAL          shift and go to state 62
+    GT              shift and go to state 63
+    LT              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
+
+    operador                       shift and go to state 55
+
+state 37
+
+    (29) valor -> NUMBER .
+
+    SEMICOLON       reduce using rule 29 (valor -> NUMBER .)
+    MULTIPLY        reduce using rule 29 (valor -> NUMBER .)
+    DIV             reduce using rule 29 (valor -> NUMBER .)
+    MOD             reduce using rule 29 (valor -> NUMBER .)
+    PLUS            reduce using rule 29 (valor -> NUMBER .)
+    MINUS           reduce using rule 29 (valor -> NUMBER .)
+    EQUAL           reduce using rule 29 (valor -> NUMBER .)
+    NEQUAL          reduce using rule 29 (valor -> NUMBER .)
+    GT              reduce using rule 29 (valor -> NUMBER .)
+    LT              reduce using rule 29 (valor -> NUMBER .)
+    GTE             reduce using rule 29 (valor -> NUMBER .)
+    LTE             reduce using rule 29 (valor -> NUMBER .)
+    AND             reduce using rule 29 (valor -> NUMBER .)
+    OR              reduce using rule 29 (valor -> NUMBER .)
+    RPAREN          reduce using rule 29 (valor -> NUMBER .)
+
+
+state 38
+
+    (30) valor -> CHARACTER .
+
+    SEMICOLON       reduce using rule 30 (valor -> CHARACTER .)
+    MULTIPLY        reduce using rule 30 (valor -> CHARACTER .)
+    DIV             reduce using rule 30 (valor -> CHARACTER .)
+    MOD             reduce using rule 30 (valor -> CHARACTER .)
+    PLUS            reduce using rule 30 (valor -> CHARACTER .)
+    MINUS           reduce using rule 30 (valor -> CHARACTER .)
+    EQUAL           reduce using rule 30 (valor -> CHARACTER .)
+    NEQUAL          reduce using rule 30 (valor -> CHARACTER .)
+    GT              reduce using rule 30 (valor -> CHARACTER .)
+    LT              reduce using rule 30 (valor -> CHARACTER .)
+    GTE             reduce using rule 30 (valor -> CHARACTER .)
+    LTE             reduce using rule 30 (valor -> CHARACTER .)
+    AND             reduce using rule 30 (valor -> CHARACTER .)
+    OR              reduce using rule 30 (valor -> CHARACTER .)
+    RPAREN          reduce using rule 30 (valor -> CHARACTER .)
+
+
+state 39
+
+    (31) valor -> boolean .
+
+    SEMICOLON       reduce using rule 31 (valor -> boolean .)
+    MULTIPLY        reduce using rule 31 (valor -> boolean .)
+    DIV             reduce using rule 31 (valor -> boolean .)
+    MOD             reduce using rule 31 (valor -> boolean .)
+    PLUS            reduce using rule 31 (valor -> boolean .)
+    MINUS           reduce using rule 31 (valor -> boolean .)
+    EQUAL           reduce using rule 31 (valor -> boolean .)
+    NEQUAL          reduce using rule 31 (valor -> boolean .)
+    GT              reduce using rule 31 (valor -> boolean .)
+    LT              reduce using rule 31 (valor -> boolean .)
+    GTE             reduce using rule 31 (valor -> boolean .)
+    LTE             reduce using rule 31 (valor -> boolean .)
+    AND             reduce using rule 31 (valor -> boolean .)
+    OR              reduce using rule 31 (valor -> boolean .)
+    RPAREN          reduce using rule 31 (valor -> boolean .)
+
+
+state 40
+
+    (32) valor -> operation .
+
+    SEMICOLON       reduce using rule 32 (valor -> operation .)
+    MULTIPLY        reduce using rule 32 (valor -> operation .)
+    DIV             reduce using rule 32 (valor -> operation .)
+    MOD             reduce using rule 32 (valor -> operation .)
+    PLUS            reduce using rule 32 (valor -> operation .)
+    MINUS           reduce using rule 32 (valor -> operation .)
+    EQUAL           reduce using rule 32 (valor -> operation .)
+    NEQUAL          reduce using rule 32 (valor -> operation .)
+    GT              reduce using rule 32 (valor -> operation .)
+    LT              reduce using rule 32 (valor -> operation .)
+    GTE             reduce using rule 32 (valor -> operation .)
+    LTE             reduce using rule 32 (valor -> operation .)
+    AND             reduce using rule 32 (valor -> operation .)
+    OR              reduce using rule 32 (valor -> operation .)
+    RPAREN          reduce using rule 32 (valor -> operation .)
+
+
+state 41
+
+    (33) valor -> parentheses .
+
+    SEMICOLON       reduce using rule 33 (valor -> parentheses .)
+    MULTIPLY        reduce using rule 33 (valor -> parentheses .)
+    DIV             reduce using rule 33 (valor -> parentheses .)
+    MOD             reduce using rule 33 (valor -> parentheses .)
+    PLUS            reduce using rule 33 (valor -> parentheses .)
+    MINUS           reduce using rule 33 (valor -> parentheses .)
+    EQUAL           reduce using rule 33 (valor -> parentheses .)
+    NEQUAL          reduce using rule 33 (valor -> parentheses .)
+    GT              reduce using rule 33 (valor -> parentheses .)
+    LT              reduce using rule 33 (valor -> parentheses .)
+    GTE             reduce using rule 33 (valor -> parentheses .)
+    LTE             reduce using rule 33 (valor -> parentheses .)
+    AND             reduce using rule 33 (valor -> parentheses .)
+    OR              reduce using rule 33 (valor -> parentheses .)
+    RPAREN          reduce using rule 33 (valor -> parentheses .)
+
+
+state 42
+
+    (27) boolean -> TRUE .
+
+    SEMICOLON       reduce using rule 27 (boolean -> TRUE .)
+    MULTIPLY        reduce using rule 27 (boolean -> TRUE .)
+    DIV             reduce using rule 27 (boolean -> TRUE .)
+    MOD             reduce using rule 27 (boolean -> TRUE .)
+    PLUS            reduce using rule 27 (boolean -> TRUE .)
+    MINUS           reduce using rule 27 (boolean -> TRUE .)
+    EQUAL           reduce using rule 27 (boolean -> TRUE .)
+    NEQUAL          reduce using rule 27 (boolean -> TRUE .)
+    GT              reduce using rule 27 (boolean -> TRUE .)
+    LT              reduce using rule 27 (boolean -> TRUE .)
+    GTE             reduce using rule 27 (boolean -> TRUE .)
+    LTE             reduce using rule 27 (boolean -> TRUE .)
+    AND             reduce using rule 27 (boolean -> TRUE .)
+    OR              reduce using rule 27 (boolean -> TRUE .)
+    RPAREN          reduce using rule 27 (boolean -> TRUE .)
+
+
+state 43
+
+    (28) boolean -> FALSE .
+
+    SEMICOLON       reduce using rule 28 (boolean -> FALSE .)
+    MULTIPLY        reduce using rule 28 (boolean -> FALSE .)
+    DIV             reduce using rule 28 (boolean -> FALSE .)
+    MOD             reduce using rule 28 (boolean -> FALSE .)
+    PLUS            reduce using rule 28 (boolean -> FALSE .)
+    MINUS           reduce using rule 28 (boolean -> FALSE .)
+    EQUAL           reduce using rule 28 (boolean -> FALSE .)
+    NEQUAL          reduce using rule 28 (boolean -> FALSE .)
+    GT              reduce using rule 28 (boolean -> FALSE .)
+    LT              reduce using rule 28 (boolean -> FALSE .)
+    GTE             reduce using rule 28 (boolean -> FALSE .)
+    LTE             reduce using rule 28 (boolean -> FALSE .)
+    AND             reduce using rule 28 (boolean -> FALSE .)
+    OR              reduce using rule 28 (boolean -> FALSE .)
+    RPAREN          reduce using rule 28 (boolean -> FALSE .)
+
+
+state 44
+
+    (39) parentheses -> LPAREN . valor RPAREN
+    (29) valor -> . NUMBER
+    (30) valor -> . CHARACTER
+    (31) valor -> . boolean
+    (32) valor -> . operation
+    (33) valor -> . parentheses
+    (27) boolean -> . TRUE
+    (28) boolean -> . FALSE
+    (34) operation -> . valor operador valor
+    (39) parentheses -> . LPAREN valor RPAREN
+
+    NUMBER          shift and go to state 37
+    CHARACTER       shift and go to state 38
+    TRUE            shift and go to state 42
+    FALSE           shift and go to state 43
+    LPAREN          shift and go to state 44
+
+    valor                          shift and go to state 69
+    boolean                        shift and go to state 39
+    operation                      shift and go to state 40
+    parentheses                    shift and go to state 41
+
+state 45
+
+    (37) declaration -> type NOME ASSIGN . valor SEMICOLON
+    (29) valor -> . NUMBER
+    (30) valor -> . CHARACTER
+    (31) valor -> . boolean
+    (32) valor -> . operation
+    (33) valor -> . parentheses
+    (27) boolean -> . TRUE
+    (28) boolean -> . FALSE
+    (34) operation -> . valor operador valor
+    (39) parentheses -> . LPAREN valor RPAREN
+
+    NUMBER          shift and go to state 37
+    CHARACTER       shift and go to state 38
+    TRUE            shift and go to state 42
+    FALSE           shift and go to state 43
+    LPAREN          shift and go to state 44
+
+    valor                          shift and go to state 70
+    boolean                        shift and go to state 39
+    operation                      shift and go to state 40
+    parentheses                    shift and go to state 41
+
+state 46
+
+    (38) declaration -> type NOME SEMICOLON .
+
+    RBRACE          reduce using rule 38 (declaration -> type NOME SEMICOLON .)
+    SEMICOLON       reduce using rule 38 (declaration -> type NOME SEMICOLON .)
+
+
+state 47
+
+    (42) if_statement -> IF LPAREN valor . RPAREN LBRACE bloco RBRACE
+    (34) operation -> valor . operador valor
+    (14) operador -> . MULTIPLY
+    (15) operador -> . DIV
+    (16) operador -> . MOD
+    (17) operador -> . PLUS
+    (18) operador -> . MINUS
+    (19) operador -> . EQUAL
+    (20) operador -> . NEQUAL
+    (21) operador -> . GT
+    (22) operador -> . LT
+    (23) operador -> . GTE
+    (24) operador -> . LTE
+    (25) operador -> . AND
+    (26) operador -> . OR
+
+    RPAREN          shift and go to state 71
+    MULTIPLY        shift and go to state 56
+    DIV             shift and go to state 57
+    MOD             shift and go to state 58
+    PLUS            shift and go to state 59
+    MINUS           shift and go to state 60
+    EQUAL           shift and go to state 61
+    NEQUAL          shift and go to state 62
+    GT              shift and go to state 63
+    LT              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
+
+    operador                       shift and go to state 55
+
+state 48
+
+    (43) while_statement -> WHILE LPAREN valor . RPAREN LBRACE bloco RBRACE
+    (34) operation -> valor . operador valor
+    (14) operador -> . MULTIPLY
+    (15) operador -> . DIV
+    (16) operador -> . MOD
+    (17) operador -> . PLUS
+    (18) operador -> . MINUS
+    (19) operador -> . EQUAL
+    (20) operador -> . NEQUAL
+    (21) operador -> . GT
+    (22) operador -> . LT
+    (23) operador -> . GTE
+    (24) operador -> . LTE
+    (25) operador -> . AND
+    (26) operador -> . OR
+
+    RPAREN          shift and go to state 72
+    MULTIPLY        shift and go to state 56
+    DIV             shift and go to state 57
+    MOD             shift and go to state 58
+    PLUS            shift and go to state 59
+    MINUS           shift and go to state 60
+    EQUAL           shift and go to state 61
+    NEQUAL          shift and go to state 62
+    GT              shift and go to state 63
+    LT              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
+
+    operador                       shift and go to state 55
+
+state 49
+
+    (44) for_statement -> FOR LPAREN assignment_or_declaration_or_value . SEMICOLON assignment_or_value SEMICOLON assignment_or_value RPAREN comando
+
+    SEMICOLON       shift and go to state 73
+
+
+state 50
+
+    (45) assignment_or_declaration_or_value -> assignment .
+
+    SEMICOLON       reduce using rule 45 (assignment_or_declaration_or_value -> assignment .)
+
+
+state 51
+
+    (46) assignment_or_declaration_or_value -> declaration .
+
+    SEMICOLON       reduce using rule 46 (assignment_or_declaration_or_value -> declaration .)
+
+
+state 52
+
+    (47) assignment_or_declaration_or_value -> valor .
+    (34) operation -> valor . operador valor
+    (14) operador -> . MULTIPLY
+    (15) operador -> . DIV
+    (16) operador -> . MOD
+    (17) operador -> . PLUS
+    (18) operador -> . MINUS
+    (19) operador -> . EQUAL
+    (20) operador -> . NEQUAL
+    (21) operador -> . GT
+    (22) operador -> . LT
+    (23) operador -> . GTE
+    (24) operador -> . LTE
+    (25) operador -> . AND
+    (26) operador -> . OR
+
+    SEMICOLON       reduce using rule 47 (assignment_or_declaration_or_value -> valor .)
+    MULTIPLY        shift and go to state 56
+    DIV             shift and go to state 57
+    MOD             shift and go to state 58
+    PLUS            shift and go to state 59
+    MINUS           shift and go to state 60
+    EQUAL           shift and go to state 61
+    NEQUAL          shift and go to state 62
+    GT              shift and go to state 63
+    LT              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
+
+    operador                       shift and go to state 55
+
+state 53
+
+    (35) assignment -> NOME . valor
+    (29) valor -> . NUMBER
+    (30) valor -> . CHARACTER
+    (31) valor -> . boolean
+    (32) valor -> . operation
+    (33) valor -> . parentheses
+    (27) boolean -> . TRUE
+    (28) boolean -> . FALSE
+    (34) operation -> . valor operador valor
+    (39) parentheses -> . LPAREN valor RPAREN
+
+    NUMBER          shift and go to state 37
+    CHARACTER       shift and go to state 38
+    TRUE            shift and go to state 42
+    FALSE           shift and go to state 43
+    LPAREN          shift and go to state 44
+
+    valor                          shift and go to state 74
+    boolean                        shift and go to state 39
+    operation                      shift and go to state 40
+    parentheses                    shift and go to state 41
+
+state 54
+
+    (54) return_statement -> RETURN valor SEMICOLON .
+
+    RBRACE          reduce using rule 54 (return_statement -> RETURN valor SEMICOLON .)
+
+
+state 55
+
+    (34) operation -> valor operador . valor
+    (29) valor -> . NUMBER
+    (30) valor -> . CHARACTER
+    (31) valor -> . boolean
+    (32) valor -> . operation
+    (33) valor -> . parentheses
+    (27) boolean -> . TRUE
+    (28) boolean -> . FALSE
+    (34) operation -> . valor operador valor
+    (39) parentheses -> . LPAREN valor RPAREN
+
+    NUMBER          shift and go to state 37
+    CHARACTER       shift and go to state 38
+    TRUE            shift and go to state 42
+    FALSE           shift and go to state 43
+    LPAREN          shift and go to state 44
+
+    valor                          shift and go to state 75
+    boolean                        shift and go to state 39
+    operation                      shift and go to state 40
+    parentheses                    shift and go to state 41
+
+state 56
+
+    (14) operador -> MULTIPLY .
+
+    NUMBER          reduce using rule 14 (operador -> MULTIPLY .)
+    CHARACTER       reduce using rule 14 (operador -> MULTIPLY .)
+    TRUE            reduce using rule 14 (operador -> MULTIPLY .)
+    FALSE           reduce using rule 14 (operador -> MULTIPLY .)
+    LPAREN          reduce using rule 14 (operador -> MULTIPLY .)
+
+
+state 57
+
+    (15) operador -> DIV .
+
+    NUMBER          reduce using rule 15 (operador -> DIV .)
+    CHARACTER       reduce using rule 15 (operador -> DIV .)
+    TRUE            reduce using rule 15 (operador -> DIV .)
+    FALSE           reduce using rule 15 (operador -> DIV .)
+    LPAREN          reduce using rule 15 (operador -> DIV .)
+
+
+state 58
+
+    (16) operador -> MOD .
+
+    NUMBER          reduce using rule 16 (operador -> MOD .)
+    CHARACTER       reduce using rule 16 (operador -> MOD .)
+    TRUE            reduce using rule 16 (operador -> MOD .)
+    FALSE           reduce using rule 16 (operador -> MOD .)
+    LPAREN          reduce using rule 16 (operador -> MOD .)
+
+
+state 59
+
+    (17) operador -> PLUS .
+
+    NUMBER          reduce using rule 17 (operador -> PLUS .)
+    CHARACTER       reduce using rule 17 (operador -> PLUS .)
+    TRUE            reduce using rule 17 (operador -> PLUS .)
+    FALSE           reduce using rule 17 (operador -> PLUS .)
+    LPAREN          reduce using rule 17 (operador -> PLUS .)
+
+
+state 60
+
+    (18) operador -> MINUS .
+
+    NUMBER          reduce using rule 18 (operador -> MINUS .)
+    CHARACTER       reduce using rule 18 (operador -> MINUS .)
+    TRUE            reduce using rule 18 (operador -> MINUS .)
+    FALSE           reduce using rule 18 (operador -> MINUS .)
+    LPAREN          reduce using rule 18 (operador -> MINUS .)
+
+
+state 61
+
+    (19) operador -> EQUAL .
+
+    NUMBER          reduce using rule 19 (operador -> EQUAL .)
+    CHARACTER       reduce using rule 19 (operador -> EQUAL .)
+    TRUE            reduce using rule 19 (operador -> EQUAL .)
+    FALSE           reduce using rule 19 (operador -> EQUAL .)
+    LPAREN          reduce using rule 19 (operador -> EQUAL .)
+
+
+state 62
+
+    (20) operador -> NEQUAL .
+
+    NUMBER          reduce using rule 20 (operador -> NEQUAL .)
+    CHARACTER       reduce using rule 20 (operador -> NEQUAL .)
+    TRUE            reduce using rule 20 (operador -> NEQUAL .)
+    FALSE           reduce using rule 20 (operador -> NEQUAL .)
+    LPAREN          reduce using rule 20 (operador -> NEQUAL .)
+
+
+state 63
+
+    (21) operador -> GT .
+
+    NUMBER          reduce using rule 21 (operador -> GT .)
+    CHARACTER       reduce using rule 21 (operador -> GT .)
+    TRUE            reduce using rule 21 (operador -> GT .)
+    FALSE           reduce using rule 21 (operador -> GT .)
+    LPAREN          reduce using rule 21 (operador -> GT .)
+
+
+state 64
+
+    (22) operador -> LT .
+
+    NUMBER          reduce using rule 22 (operador -> LT .)
+    CHARACTER       reduce using rule 22 (operador -> LT .)
+    TRUE            reduce using rule 22 (operador -> LT .)
+    FALSE           reduce using rule 22 (operador -> LT .)
+    LPAREN          reduce using rule 22 (operador -> LT .)
+
+
+state 65
+
+    (23) operador -> GTE .
+
+    NUMBER          reduce using rule 23 (operador -> GTE .)
+    CHARACTER       reduce using rule 23 (operador -> GTE .)
+    TRUE            reduce using rule 23 (operador -> GTE .)
+    FALSE           reduce using rule 23 (operador -> GTE .)
+    LPAREN          reduce using rule 23 (operador -> GTE .)
+
+
+state 66
+
+    (24) operador -> LTE .
+
+    NUMBER          reduce using rule 24 (operador -> LTE .)
+    CHARACTER       reduce using rule 24 (operador -> LTE .)
+    TRUE            reduce using rule 24 (operador -> LTE .)
+    FALSE           reduce using rule 24 (operador -> LTE .)
+    LPAREN          reduce using rule 24 (operador -> LTE .)
+
+
+state 67
+
+    (25) operador -> AND .
+
+    NUMBER          reduce using rule 25 (operador -> AND .)
+    CHARACTER       reduce using rule 25 (operador -> AND .)
+    TRUE            reduce using rule 25 (operador -> AND .)
+    FALSE           reduce using rule 25 (operador -> AND .)
+    LPAREN          reduce using rule 25 (operador -> AND .)
+
+
+state 68
+
+    (26) operador -> OR .
+
+    NUMBER          reduce using rule 26 (operador -> OR .)
+    CHARACTER       reduce using rule 26 (operador -> OR .)
+    TRUE            reduce using rule 26 (operador -> OR .)
+    FALSE           reduce using rule 26 (operador -> OR .)
+    LPAREN          reduce using rule 26 (operador -> OR .)
+
+
+state 69
+
+    (39) parentheses -> LPAREN valor . RPAREN
+    (34) operation -> valor . operador valor
+    (14) operador -> . MULTIPLY
+    (15) operador -> . DIV
+    (16) operador -> . MOD
+    (17) operador -> . PLUS
+    (18) operador -> . MINUS
+    (19) operador -> . EQUAL
+    (20) operador -> . NEQUAL
+    (21) operador -> . GT
+    (22) operador -> . LT
+    (23) operador -> . GTE
+    (24) operador -> . LTE
+    (25) operador -> . AND
+    (26) operador -> . OR
+
+    RPAREN          shift and go to state 76
+    MULTIPLY        shift and go to state 56
+    DIV             shift and go to state 57
+    MOD             shift and go to state 58
+    PLUS            shift and go to state 59
+    MINUS           shift and go to state 60
+    EQUAL           shift and go to state 61
+    NEQUAL          shift and go to state 62
+    GT              shift and go to state 63
+    LT              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
+
+    operador                       shift and go to state 55
+
+state 70
+
+    (37) declaration -> type NOME ASSIGN valor . SEMICOLON
+    (34) operation -> valor . operador valor
+    (14) operador -> . MULTIPLY
+    (15) operador -> . DIV
+    (16) operador -> . MOD
+    (17) operador -> . PLUS
+    (18) operador -> . MINUS
+    (19) operador -> . EQUAL
+    (20) operador -> . NEQUAL
+    (21) operador -> . GT
+    (22) operador -> . LT
+    (23) operador -> . GTE
+    (24) operador -> . LTE
+    (25) operador -> . AND
+    (26) operador -> . OR
+
+    SEMICOLON       shift and go to state 77
+    MULTIPLY        shift and go to state 56
+    DIV             shift and go to state 57
+    MOD             shift and go to state 58
+    PLUS            shift and go to state 59
+    MINUS           shift and go to state 60
+    EQUAL           shift and go to state 61
+    NEQUAL          shift and go to state 62
+    GT              shift and go to state 63
+    LT              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
+
+    operador                       shift and go to state 55
+
+state 71
+
+    (42) if_statement -> IF LPAREN valor RPAREN . LBRACE bloco RBRACE
+
+    LBRACE          shift and go to state 78
+
+
+state 72
+
+    (43) while_statement -> WHILE LPAREN valor RPAREN . LBRACE bloco RBRACE
+
+    LBRACE          shift and go to state 79
+
+
+state 73
+
+    (44) for_statement -> FOR LPAREN assignment_or_declaration_or_value SEMICOLON . assignment_or_value SEMICOLON assignment_or_value RPAREN comando
+    (48) assignment_or_value -> . assignment
+    (49) assignment_or_value -> . valor
+    (35) assignment -> . NOME valor
+    (29) valor -> . NUMBER
+    (30) valor -> . CHARACTER
+    (31) valor -> . boolean
+    (32) valor -> . operation
+    (33) valor -> . parentheses
+    (27) boolean -> . TRUE
+    (28) boolean -> . FALSE
+    (34) operation -> . valor operador valor
+    (39) parentheses -> . LPAREN valor RPAREN
+
+    NOME            shift and go to state 53
+    NUMBER          shift and go to state 37
+    CHARACTER       shift and go to state 38
+    TRUE            shift and go to state 42
+    FALSE           shift and go to state 43
+    LPAREN          shift and go to state 44
+
+    assignment_or_value            shift and go to state 80
+    assignment                     shift and go to state 81
+    valor                          shift and go to state 82
+    boolean                        shift and go to state 39
+    operation                      shift and go to state 40
+    parentheses                    shift and go to state 41
+
+state 74
+
+    (35) assignment -> NOME valor .
+    (34) operation -> valor . operador valor
+    (14) operador -> . MULTIPLY
+    (15) operador -> . DIV
+    (16) operador -> . MOD
+    (17) operador -> . PLUS
+    (18) operador -> . MINUS
+    (19) operador -> . EQUAL
+    (20) operador -> . NEQUAL
+    (21) operador -> . GT
+    (22) operador -> . LT
+    (23) operador -> . GTE
+    (24) operador -> . LTE
+    (25) operador -> . AND
+    (26) operador -> . OR
+
+    SEMICOLON       reduce using rule 35 (assignment -> NOME valor .)
+    RPAREN          reduce using rule 35 (assignment -> NOME valor .)
+    MULTIPLY        shift and go to state 56
+    DIV             shift and go to state 57
+    MOD             shift and go to state 58
+    PLUS            shift and go to state 59
+    MINUS           shift and go to state 60
+    EQUAL           shift and go to state 61
+    NEQUAL          shift and go to state 62
+    GT              shift and go to state 63
+    LT              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
+
+    operador                       shift and go to state 55
+
+state 75
+
+    (34) operation -> valor operador valor .
+    (34) operation -> valor . operador valor
+    (14) operador -> . MULTIPLY
+    (15) operador -> . DIV
+    (16) operador -> . MOD
+    (17) operador -> . PLUS
+    (18) operador -> . MINUS
+    (19) operador -> . EQUAL
+    (20) operador -> . NEQUAL
+    (21) operador -> . GT
+    (22) operador -> . LT
+    (23) operador -> . GTE
+    (24) operador -> . LTE
+    (25) operador -> . AND
+    (26) operador -> . OR
+
+  ! shift/reduce conflict for MULTIPLY resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for MOD resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for EQUAL resolved as shift
+  ! shift/reduce conflict for NEQUAL resolved as shift
+  ! shift/reduce conflict for GT resolved as shift
+  ! shift/reduce conflict for LT resolved as shift
+  ! shift/reduce conflict for GTE resolved as shift
+  ! shift/reduce conflict for LTE resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+    SEMICOLON       reduce using rule 34 (operation -> valor operador valor .)
+    RPAREN          reduce using rule 34 (operation -> valor operador valor .)
+    MULTIPLY        shift and go to state 56
+    DIV             shift and go to state 57
+    MOD             shift and go to state 58
+    PLUS            shift and go to state 59
+    MINUS           shift and go to state 60
+    EQUAL           shift and go to state 61
+    NEQUAL          shift and go to state 62
+    GT              shift and go to state 63
+    LT              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
+
+  ! MULTIPLY        [ reduce using rule 34 (operation -> valor operador valor .) ]
+  ! DIV             [ reduce using rule 34 (operation -> valor operador valor .) ]
+  ! MOD             [ reduce using rule 34 (operation -> valor operador valor .) ]
+  ! PLUS            [ reduce using rule 34 (operation -> valor operador valor .) ]
+  ! MINUS           [ reduce using rule 34 (operation -> valor operador valor .) ]
+  ! EQUAL           [ reduce using rule 34 (operation -> valor operador valor .) ]
+  ! NEQUAL          [ reduce using rule 34 (operation -> valor operador valor .) ]
+  ! GT              [ reduce using rule 34 (operation -> valor operador valor .) ]
+  ! LT              [ reduce using rule 34 (operation -> valor operador valor .) ]
+  ! GTE             [ reduce using rule 34 (operation -> valor operador valor .) ]
+  ! LTE             [ reduce using rule 34 (operation -> valor operador valor .) ]
+  ! AND             [ reduce using rule 34 (operation -> valor operador valor .) ]
+  ! OR              [ reduce using rule 34 (operation -> valor operador valor .) ]
+
+    operador                       shift and go to state 55
+
+state 76
+
+    (39) parentheses -> LPAREN valor RPAREN .
+
+    SEMICOLON       reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    MULTIPLY        reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    DIV             reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    MOD             reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    PLUS            reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    MINUS           reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    EQUAL           reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    NEQUAL          reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    GT              reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    LT              reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    GTE             reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    LTE             reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    AND             reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    OR              reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+    RPAREN          reduce using rule 39 (parentheses -> LPAREN valor RPAREN .)
+
+
+state 77
+
+    (37) declaration -> type NOME ASSIGN valor SEMICOLON .
+
+    RBRACE          reduce using rule 37 (declaration -> type NOME ASSIGN valor SEMICOLON .)
+    SEMICOLON       reduce using rule 37 (declaration -> type NOME ASSIGN valor SEMICOLON .)
+
+
+state 78
+
+    (42) if_statement -> IF LPAREN valor RPAREN LBRACE . bloco RBRACE
+    (40) bloco -> . LBRACE comando RBRACE
+    (41) bloco -> . LBRACE RBRACE
+
+    LBRACE          shift and go to state 7
+
+    bloco                          shift and go to state 83
+
+state 79
+
+    (43) while_statement -> WHILE LPAREN valor RPAREN LBRACE . bloco RBRACE
+    (40) bloco -> . LBRACE comando RBRACE
+    (41) bloco -> . LBRACE RBRACE
+
+    LBRACE          shift and go to state 7
+
+    bloco                          shift and go to state 84
+
+state 80
+
+    (44) for_statement -> FOR LPAREN assignment_or_declaration_or_value SEMICOLON assignment_or_value . SEMICOLON assignment_or_value RPAREN comando
+
+    SEMICOLON       shift and go to state 85
+
+
+state 81
+
+    (48) assignment_or_value -> assignment .
+
+    SEMICOLON       reduce using rule 48 (assignment_or_value -> assignment .)
+    RPAREN          reduce using rule 48 (assignment_or_value -> assignment .)
+
+
+state 82
+
+    (49) assignment_or_value -> valor .
+    (34) operation -> valor . operador valor
+    (14) operador -> . MULTIPLY
+    (15) operador -> . DIV
+    (16) operador -> . MOD
+    (17) operador -> . PLUS
+    (18) operador -> . MINUS
+    (19) operador -> . EQUAL
+    (20) operador -> . NEQUAL
+    (21) operador -> . GT
+    (22) operador -> . LT
+    (23) operador -> . GTE
+    (24) operador -> . LTE
+    (25) operador -> . AND
+    (26) operador -> . OR
+
+    SEMICOLON       reduce using rule 49 (assignment_or_value -> valor .)
+    RPAREN          reduce using rule 49 (assignment_or_value -> valor .)
+    MULTIPLY        shift and go to state 56
+    DIV             shift and go to state 57
+    MOD             shift and go to state 58
+    PLUS            shift and go to state 59
+    MINUS           shift and go to state 60
+    EQUAL           shift and go to state 61
+    NEQUAL          shift and go to state 62
+    GT              shift and go to state 63
+    LT              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
+
+    operador                       shift and go to state 55
+
+state 83
+
+    (42) if_statement -> IF LPAREN valor RPAREN LBRACE bloco . RBRACE
+
+    RBRACE          shift and go to state 86
+
+
+state 84
+
+    (43) while_statement -> WHILE LPAREN valor RPAREN LBRACE bloco . RBRACE
+
+    RBRACE          shift and go to state 87
+
+
+state 85
+
+    (44) for_statement -> FOR LPAREN assignment_or_declaration_or_value SEMICOLON assignment_or_value SEMICOLON . assignment_or_value RPAREN comando
+    (48) assignment_or_value -> . assignment
+    (49) assignment_or_value -> . valor
+    (35) assignment -> . NOME valor
+    (29) valor -> . NUMBER
+    (30) valor -> . CHARACTER
+    (31) valor -> . boolean
+    (32) valor -> . operation
+    (33) valor -> . parentheses
+    (27) boolean -> . TRUE
+    (28) boolean -> . FALSE
+    (34) operation -> . valor operador valor
+    (39) parentheses -> . LPAREN valor RPAREN
+
+    NOME            shift and go to state 53
+    NUMBER          shift and go to state 37
+    CHARACTER       shift and go to state 38
+    TRUE            shift and go to state 42
+    FALSE           shift and go to state 43
+    LPAREN          shift and go to state 44
+
+    assignment_or_value            shift and go to state 88
+    assignment                     shift and go to state 81
+    valor                          shift and go to state 82
+    boolean                        shift and go to state 39
+    operation                      shift and go to state 40
+    parentheses                    shift and go to state 41
+
+state 86
+
+    (42) if_statement -> IF LPAREN valor RPAREN LBRACE bloco RBRACE .
+
+    RBRACE          reduce using rule 42 (if_statement -> IF LPAREN valor RPAREN LBRACE bloco RBRACE .)
+
+
+state 87
+
+    (43) while_statement -> WHILE LPAREN valor RPAREN LBRACE bloco RBRACE .
+
+    RBRACE          reduce using rule 43 (while_statement -> WHILE LPAREN valor RPAREN LBRACE bloco RBRACE .)
+
+
+state 88
+
+    (44) for_statement -> FOR LPAREN assignment_or_declaration_or_value SEMICOLON assignment_or_value SEMICOLON assignment_or_value . RPAREN comando
+
+    RPAREN          shift and go to state 89
+
+
+state 89
+
+    (44) for_statement -> FOR LPAREN assignment_or_declaration_or_value SEMICOLON assignment_or_value SEMICOLON assignment_or_value RPAREN . comando
+    (2) comando -> . declaration
+    (3) comando -> . if_statement
+    (4) comando -> . while_statement
+    (5) comando -> . for_statement
+    (6) comando -> . break_statement
+    (7) comando -> . continue_statement
+    (8) comando -> . return_statement
+    (37) declaration -> . type NOME ASSIGN valor SEMICOLON
+    (38) declaration -> . type NOME SEMICOLON
+    (42) if_statement -> . IF LPAREN valor RPAREN LBRACE bloco RBRACE
+    (43) while_statement -> . WHILE LPAREN valor RPAREN LBRACE bloco RBRACE
+    (44) for_statement -> . FOR LPAREN assignment_or_declaration_or_value SEMICOLON assignment_or_value SEMICOLON assignment_or_value RPAREN comando
+    (52) break_statement -> . BREAK SEMICOLON
+    (53) continue_statement -> . CONTINUE SEMICOLON
+    (54) return_statement -> . RETURN valor SEMICOLON
+    (9) type -> . INT
+    (10) type -> . FLOAT
+    (11) type -> . CHAR
+    (12) type -> . VOID
+    (13) type -> . BOOL
+
+    IF              shift and go to state 18
+    WHILE           shift and go to state 19
+    FOR             shift and go to state 20
+    BREAK           shift and go to state 21
+    CONTINUE        shift and go to state 22
+    RETURN          shift and go to state 23
+    INT             shift and go to state 24
+    FLOAT           shift and go to state 25
+    CHAR            shift and go to state 26
+    VOID            shift and go to state 27
+    BOOL            shift and go to state 28
+
+    comando                        shift and go to state 90
+    declaration                    shift and go to state 10
+    if_statement                   shift and go to state 11
+    while_statement                shift and go to state 12
+    for_statement                  shift and go to state 13
+    break_statement                shift and go to state 14
+    continue_statement             shift and go to state 15
+    return_statement               shift and go to state 16
+    type                           shift and go to state 17
+
+state 90
+
+    (44) for_statement -> FOR LPAREN assignment_or_declaration_or_value SEMICOLON assignment_or_value SEMICOLON assignment_or_value RPAREN comando .
+
+    RBRACE          reduce using rule 44 (for_statement -> FOR LPAREN assignment_or_declaration_or_value SEMICOLON assignment_or_value SEMICOLON assignment_or_value RPAREN comando .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for MULTIPLY in state 75 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 75 resolved as shift
+WARNING: shift/reduce conflict for MOD in state 75 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 75 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 75 resolved as shift
+WARNING: shift/reduce conflict for EQUAL in state 75 resolved as shift
+WARNING: shift/reduce conflict for NEQUAL in state 75 resolved as shift
+WARNING: shift/reduce conflict for GT in state 75 resolved as shift
+WARNING: shift/reduce conflict for LT in state 75 resolved as shift
+WARNING: shift/reduce conflict for GTE in state 75 resolved as shift
+WARNING: shift/reduce conflict for LTE in state 75 resolved as shift
+WARNING: shift/reduce conflict for AND in state 75 resolved as shift
+WARNING: shift/reduce conflict for OR in state 75 resolved as shift

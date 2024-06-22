@@ -5,6 +5,8 @@ from emoji_lex import EmojiLexer
 
 
 class EmojiParser:
+    tokens = EmojiLexer.tokens
+
     # Precedência dos operadores
     precedence = (
         ("left", "OR"),
@@ -12,42 +14,49 @@ class EmojiParser:
         ("left", "EQUAL", "NEQUAL"),
         ("left", "LT", "LTE", "GT", "GTE"),
         ("left", "PLUS", "MINUS"),
-        ("left", "MULTIPLY", "DIVIDE", "MOD"),
+        ("left", "MULTIPLY", "DIV", "MOD"),
         ("right", "NOT"),
-        ("right", "UMINUS"),
     )
     # dictionary of names
     names = {}
 
-    def __init__(self, lexer):
-        self.yacc = yacc.yacc(module=self)
+    def __init__(self):
+        self.lexer = EmojiLexer(debug=True)
+        self.parser = yacc.yacc(module=self, debug=True)
+        self.comandos = []
 
-    def p_statement_expr(self, p):
-        """statement : comando
-        | type ..."""
-        print(p[1])
+    def parse(self, data):
+        result = self.parser.parse(data, lexer=self.lexer.lexer)
+        print(result)
+
+    def p_program(self, p):
+        """program : INT MAIN LPAREN RPAREN bloco"""
+        print("Programa identificado")
+        p[0] = p[5]
 
     def p_comando(self, p):
-        """comando : ASSIGN
-        | IF
-        | ELSE
-        | WHILE
-        | FOR
-        | BREAK
-        | CONTINUE
-        | RETURN"""
+        """comando : declaration
+        | if_statement
+        | while_statement
+        | for_statement
+        | break_statement
+        | continue_statement
+        | return_statement"""
+        print("Comando identificado: ", p[1])
+        p[0] = p[1]
 
-    # Tipos de dados
     def p_type(self, p):
         """type : INT
         | FLOAT
         | CHAR
-        | VOID"""
+        | VOID
+        | BOOL"""
+        print("Tipo identificado: ", p[1])
         p[0] = p[1]
 
     def p_operador(self, p):
         """operador : MULTIPLY
-        | DIVIDE
+        | DIV
         | MOD
         | PLUS
         | MINUS
@@ -67,52 +76,40 @@ class EmojiParser:
         | FALSE"""
         p[0] = p[1]
 
-    def p_nome(self, p):
-        """NOME"""
-
     def p_valor(self, p):
-        pass
+        """valor : NUMBER
+        | CHARACTER
+        | boolean
+        | operation
+        | parentheses"""
+        p[0] = p[1]
 
-    def p_operation_binop(self, p):
+    def p_operation(self, p):
         """
         operation : valor operador valor
         """
-        if p[2] == "+":
-            p[0] = p[1] + p[3]
-        elif p[2] == "-":
-            p[0] = p[1] - p[3]
-        elif p[2] == "*":
-            p[0] = p[1] * p[3]
-        elif p[2] == "/":
-            p[0] = p[1] / p[3]
 
-    def p_assign(self, p):
-        """assign: NOME valor"""
-        if (self.names.get(p[1])):
-            if (type(self.names[p[1]]) == type(p[2])):
+    def p_assignment(self, p):
+        """assignment : NOME valor"""
+        if self.names.get(p[1]):
+            if type(self.names[p[1]]) == type(p[2]):
                 self.names[p[1]] = p[2]
-    
+
     def p_declare(self, p):
-        """declare: type NOME valor"""
-        if ():
-            self.names[p[2]]
+        """declare : type NOME valor"""
+        self.names[p[2]]
 
     # Declaração de variáveis
     def p_declaration(self, p):
-        """declaration : type NOME ASSIGN expression SEMICOLON
+        """declaration : type NOME ASSIGN valor SEMICOLON
         | type NOME SEMICOLON"""
         if len(p) == 6:
-            p[0] = ("assign", p[2], p[4])
-        else:
+            p[0] = ("assignment", p[2], p[4])
+        elif len(p) == 7:
             p[0] = ("declare", p[1], p[2])
 
-    # Atribuição
-    def p_assignment(self, p):
-        """assignment : NOME ASSIGN expression SEMICOLON"""
-        p[0] = ("assign", p[1], p[3])
-
     def p_parentheses(self, p):
-        """parentheses: LPAREN valor RPAREN"""
+        """parentheses : LPAREN valor RPAREN"""
         p[0] = p[2]
 
     # Bloco de código
@@ -124,22 +121,28 @@ class EmojiParser:
 
     # Condicional
     def p_if_statement(self, p):
-        """if_statement : IF LPAREN expression RPAREN LBRACE block RBRACE
-        | IF LPAREN expression RPAREN LBRACE block RBRACE ELSE LBRACE block RBRACE"""
-        if len(p) == 8:
-            p[0] = ("if", p[3], p[6])
-        else:
-            p[0] = ("ifelse", p[3], p[6], p[10])
+        """if_statement : IF LPAREN valor RPAREN LBRACE bloco RBRACE"""
+        p[0] = ("if", p[3], p[6])
 
     # Loop while
     def p_while_statement(self, p):
-        """while_statement : WHILE LPAREN expression RPAREN LBRACE block RBRACE"""
+        """while_statement : WHILE LPAREN valor RPAREN LBRACE bloco RBRACE"""
         p[0] = ("while", p[3], p[6])
 
-    # Loop for
     def p_for_statement(self, p):
-        """for_statement : FOR LPAREN declaration SEMICOLON expression SEMICOLON assignment RPAREN LBRACE block RBRACE"""
-        p[0] = ("for", p[3], p[5], p[7], p[10])
+        """for_statement : FOR LPAREN assignment_or_declaration_or_value SEMICOLON assignment_or_value SEMICOLON assignment_or_value RPAREN comando"""
+        p[0] = ("for", p[3], p[5], p[7], p[9])
+
+    def p_assignment_or_declaration_or_value(self, p):
+        """assignment_or_declaration_or_value : assignment
+        | declaration
+        | valor"""
+        p[0] = p[1]
+
+    def p_assignment_or_value(self, p):
+        """assignment_or_value : assignment
+        | valor"""
+        p[0] = p[1]
 
     # Leitura de entrada
     def p_scanf_statement(self, p):
@@ -148,7 +151,7 @@ class EmojiParser:
 
     # Impressão
     def p_printf_statement(self, p):
-        """printf_statement : PRINTF LPAREN expression RPAREN SEMICOLON"""
+        """printf_statement : PRINTF LPAREN valor RPAREN SEMICOLON"""
         p[0] = ("printf", p[3])
 
     # Interrupção de loop
@@ -163,7 +166,7 @@ class EmojiParser:
 
     # Retorno de valor
     def p_return_statement(self, p):
-        """return_statement : RETURN expression SEMICOLON"""
+        """return_statement : RETURN valor SEMICOLON"""
         p[0] = ("return", p[2])
 
     # Erro de sintaxe
@@ -172,23 +175,12 @@ class EmojiParser:
 
 
 def main() -> None:
-    lexer = EmojiLexer()
+    parser = EmojiParser()
 
-    codigo = """
-        ℹ x🟰5❣
-        👨
-        👉
-            🖨🤜x🤛❣
-        👈
-        """
+    codigo = "ℹ️👨🤜🤛👉☁x🟰5💥1❣👈"
 
     # Give the lexer some input
-    lexer.test(codigo)
-
-    
-    parser = EmojiParser()
-    result = parser.yacc.parse(codigo, lexer=lexer.lexer)
-    print(result)
+    parser.parse(codigo)
 
 
 if __name__ == "__main__":

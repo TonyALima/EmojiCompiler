@@ -8,7 +8,7 @@ class EmojiLexer:
         "INT",
         "FLOAT",
         "CHAR",
-        "VONOME",
+        "VOID",
         "BOOL",
         "ASSIGN",
         "SCANF",
@@ -29,7 +29,7 @@ class EmojiLexer:
         "PLUS",
         "MINUS",
         "MULTIPLY",
-        "DIVNOMEE",
+        "DIV",
         "MOD",
         "LBRACE",
         "RBRACE",
@@ -47,16 +47,15 @@ class EmojiLexer:
         "CONTINUE",
         "RETURN",
         "MAIN",
-        "NOMEENTIFIER",
         "NUMBER",
         "CHARACTER",
     )
 
     # Expressões regulares para tokens simples
     t_CHAR = r"🔤"
-    t_INT = r"ℹ"
+    t_INT = r"ℹ️"
     t_FLOAT = r"☁"
-    t_VONOME = r"🥚"
+    t_VOID = r"🥚"
     t_BOOL = r"🐃"
     t_ASSIGN = r"🟰"
     t_SCANF = r"🔍"
@@ -77,7 +76,7 @@ class EmojiLexer:
     t_PLUS = r"➕"
     t_MINUS = r"➖"
     t_MULTIPLY = r"✖"
-    t_DIVNOMEE = r"➗"
+    t_DIV = r"➗"
     t_MOD = r"💩"
     t_LBRACE = r"👉"
     t_RBRACE = r"👈"
@@ -120,7 +119,7 @@ class EmojiLexer:
 
     # Regra para capturar erros
     def t_error(self, t: lex.LexToken):
-        print(f"Caracter inválNOMEo '{t.value[0]}'")
+        print(f"Caracter inválido '{t.value[0]}'")
         t.lexer.skip(1)
 
     # Test it output
