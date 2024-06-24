@@ -19,21 +19,44 @@ class EmojiParser:
         ("right", "NOT"),
     )
     # dictionary of names
-    names = {}
+    variables: dict = {}
+
+    types: dict = {
+        "ℹ️": int,
+        "☁": float,
+        "🐃": bool,
+        "🥚": None,
+    }
+
+    operations: dict = {
+        "🟰": "=",
+        "➕": "+",
+        "➖": "-",
+        "✖": "*",
+        "➗": "/",
+        "❗": "!",
+        "🤏": "<",
+        "🤏🟰": "<=",
+        "🙌": ">",
+        "🙌🟰": ">=",
+        "🟰🟰": "==",
+    }
 
     def __init__(self):
         self.lexer = EmojiLexer()
         self.parser = yacc.yacc(module=self, debug=True)
-        self.comandos = []
+        self.current_type_declaration = None
+        self.commands = []
 
     def parse(self, data):
         print("/" + 10 * "-" + "Analise Sintatica" + 10 * "-" + "/")
+        print(self.variables)
+
         return self.parser.parse(data, lexer=self.lexer.lexer)
 
     def p_program(self, p: Production) -> None:
         """program : INT MAIN LPAREN RPAREN bloco"""
-        print("Programa Principal identificado")
-        p[0] = p[5]
+        p[0] = {"MAIN": p[5]}
 
     def p_sinal(self, p: Production) -> None:
         """sinal : NOT PLUS
@@ -52,23 +75,26 @@ class EmojiParser:
         | break_statement
         | continue_statement
         | return_statement"""
-        print("Comando identificado")
         p[0] = p[1]
 
     def p_comandos(self, p: Production) -> None:
         """comandos : comando comandos
         | comando"""
         if len(p) == 3:
-            p[0] = (p[1], p[2])
+            p[0] = [{"COMANDO": p[1]}] + p[2]
+            self.commands.append([p[1]] + [p[2]])
         elif len(p) == 2:
-            p[0] = p[1]
+            p[0] = [{"COMANDO": p[1]}]
+            self.commands.append(p[1])
 
     def p_bloco(self, p: Production) -> None:
         """bloco : LBRACE comandos RBRACE
         | LBRACE RBRACE"""
-        print("Bloco identificado")
         if len(p) == 4:
-            p[0] = [2]
+            self.commands.append({"bloco": p[2]})
+        else:
+            self.commands.append({"bloco": []})
+        p[0] = {"BLOCO": p[2]}
 
     def p_parentheses(self, p: Production) -> None:
         """parentheses : LPAREN valor RPAREN"""
@@ -80,8 +106,9 @@ class EmojiParser:
         | CHAR
         | VOID
         | BOOL"""
-        print("Tipo identificado: ", p[1])
-        p[0] = p[1]
+        t = self.types.get(p[1], None)
+        self.current_type_declaration = t
+        p[0] = t
 
     def p_operador(self, p: Production) -> None:
         """operador : MULTIPLY
@@ -98,73 +125,147 @@ class EmojiParser:
         | AND
         | OR
         """
-        print("Operador identificado: ", p[1])
-        p[0] = p[1]
+        p[0] = self.operations.get(p[1])
 
     def p_boolean(self, p: Production) -> None:
         """boolean : TRUE
         | FALSE"""
-        print("Booleano identificado: ", p[1])
         p[0] = p[1]
 
     def p_valor(self, p: Production) -> None:
         """valor : NUMBER
+        | NOME
         | CHARACTER
         | boolean
         | operation
         | parentheses"""
-        print("Valor identificado: ", p[1])
         p[0] = p[1]
 
     def p_operation(self, p: Production) -> None:
         """
         operation : valor operador valor
         """
-        print("Operação identificada: ", p[2])
-        p[0] = (p[2], p[1], p[3])
+        p[0] = {"OPERAÇÃO": {"valor1": p[1], "op": p[2], "valor2": p[3]}}
+        self.commands.append(
+            [{"operation": {"valor1": p[1], "op": p[2], "valor2": p[3]}}]
+        )
 
-    def assignment(self, nome: str, val) -> None:
-        if self.names.get(nome):
-            if type(self.names[nome]) == type(val):
-                self.names[nome] = val
+    def assignment(self, nome: str, val=None) -> None:
+        if self.variables.get(nome):
+            if type(self.variables[nome]) == type(val):
+                self.variables[nome] = val
 
     def p_assignment(self, p: Production) -> None:
         """assignment : NOME ASSIGN valor SEMICOLON"""
-        print("Atribuição identificada: ", p[1:4])
+        p[0] = {"ATRIBUIÇÃO": {"nome": p[1], "valor": p[3]}}
+        self.commands.append([{"assignment": {"nome": p[1], "valor": p[3]}}])
         self.assignment(p[1], p[3])
 
     def declare(self, tipo, nome: str, val=None) -> None:
-        self.names[nome] = val
-
-    def p_variable(self, p: Production) -> None:
-        """variable : NOME ASSIGN valor
-        | NOME
-        """
-        if len(p) == 4:
-            print("Variável com atribuição identificada: ", p[1:4])
-            self.declare(p[1], p[3])
-        elif len(p) == 2:
-            print("Variável identificada: ", p[1])
-            self.declare(p[1], None)
+        try:
+            self.variables[nome] = self.current_type_declaration(val)
+        except Exception as e:
+            print(e)
 
     def p_declaration_list(self, p: Production) -> None:
-        """declaration_list : variable
-        | variable COMMA declaration_list"""
-        print("Declaração de variável identificada")
-        if len(p) == 2:
-            p[0] = p[1]
+        """declaration_list : NOME
+        | NOME declaration_list
+        | NOME ASSIGN valor
+        | NOME ASSIGN valor COMMA declaration_list"""
+        l = len(p)
+        if l == 2:
+            self.declare(
+                self.current_type_declaration, p[1], self.current_type_declaration()
+            )
+            p[0] = [
+                {
+                    "nome": p[1],
+                    "type": self.current_type_declaration,
+                    "valor": self.current_type_declaration(),
+                }
+            ]
+            self.commands.append(
+                [
+                    {
+                        "declaration": {
+                            "nome": p[1],
+                            "type": self.current_type_declaration,
+                            "valor": self.current_type_declaration(),
+                        }
+                    }
+                ]
+            )
+        elif l == 3:
+            self.declare(
+                self.current_type_declaration, p[1], self.current_type_declaration()
+            )
+            p[0] = [
+                {
+                    "nome": p[1],
+                    "type": self.current_type_declaration,
+                    "valor": self.current_type_declaration(),
+                }
+            ] + p[2]
+            self.commands.append(
+                [
+                    {
+                        "declaration": {
+                            "nome": p[1],
+                            "type": self.current_type_declaration,
+                            "valor": self.current_type_declaration(),
+                        }
+                    }
+                ]
+            )
+        elif l == 4:
+            self.declare(self.current_type_declaration, p[1], p[3])
+            p[0] = [
+                {
+                    "nome": p[1],
+                    "type": self.current_type_declaration,
+                    "valor": p[3],
+                }
+            ]
+            self.commands.append(
+                [
+                    {
+                        "declaration": {
+                            "nome": p[1],
+                            "type": self.current_type_declaration,
+                            "valor": p[3],
+                        }
+                    }
+                ]
+            )
         else:
-            p[0] = (p[1], p[3])
+            self.declare(self.current_type_declaration, p[1], p[3])
+            p[0] = [
+                {
+                    "nome": p[1],
+                    "type": self.current_type_declaration,
+                    "valor": p[3],
+                }
+            ] + p[5]
+            self.commands.append(
+                [
+                    {
+                        "declaration": {
+                            "nome": p[1],
+                            "type": self.current_type_declaration,
+                            "valor": p[3],
+                        }
+                    }
+                ]
+            )
 
     def p_declaration(self, p: Production) -> None:
         """declaration : type declaration_list SEMICOLON"""
-        print("Declaração completa identificada: ", p[1], p[3])
-        p[0] = p[2]
+        p[0] = {"DECLARAÇÃO": [p[2]]}
 
     def p_if_statement(self, p: Production) -> None:
         """if_statement : IF LPAREN valor RPAREN LBRACE bloco RBRACE"""
         print("Condicional identificado")
-        p[0] = ("if", p[3], p[6])
+        p[0] = [{"if_statement": {"valor": p[3], "bloco": p[6]}}]
 
     def p_while_statement(self, p: Production) -> None:
         """while_statement : WHILE LPAREN valor RPAREN LBRACE bloco RBRACE"""
