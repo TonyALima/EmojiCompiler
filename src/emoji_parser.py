@@ -34,6 +34,14 @@ class EmojiParser:
         print("Programa identificado")
         p[0] = p[5]
 
+    def p_sinal(self, p):
+        """sinal : NOT PLUS
+        | NOT MINUS
+        | NOT
+        | PLUS
+        | MINUS"""
+        p[0] = p[1]
+
     def p_comando(self, p):
         """comando : declaration
         | if_statement
@@ -69,11 +77,13 @@ class EmojiParser:
         | AND
         | OR
         """
+        print("Operador identificado: ", p[1])
         p[0] = p[1]
 
     def p_boolean(self, p):
         """boolean : TRUE
         | FALSE"""
+        print("Booleano identificado: ", p[1])
         p[0] = p[1]
 
     def p_valor(self, p):
@@ -82,30 +92,46 @@ class EmojiParser:
         | boolean
         | operation
         | parentheses"""
+        print("Valor identificado: ", p[1])
         p[0] = p[1]
 
     def p_operation(self, p):
         """
         operation : valor operador valor
         """
+        print("Operação identificada: ", p[2])
+        p[0] = (p[2], p[1], p[3])
 
     def p_assignment(self, p):
         """assignment : NOME valor"""
+        print("Atribuição identificada: ", p[1])
         if self.names.get(p[1]):
             if type(self.names[p[1]]) == type(p[2]):
                 self.names[p[1]] = p[2]
 
     def p_declare(self, p):
         """declare : type NOME valor"""
-        self.names[p[2]]
+        print("Declaração identificada: ", p[1])
+        self.names[p[2]] = p[3]
 
-    # Declaração de variáveis
+    def p_declaration_list(self, p):
+        """declaration_list : declaration_list COMMA declaration
+        | declaration"""
+        if len(p) == 4:
+            p[0] = p[1] + [p[3]]
+        else:
+            p[0] = [p[1]]
+
     def p_declaration(self, p):
         """declaration : type NOME ASSIGN valor SEMICOLON
         | type NOME SEMICOLON"""
-        if len(p) == 6:
+        if len(p) == 5:
+            print("Declaração com atribuição identificada: ", p[2])
+            self.names[p[2]] = p[4]
             p[0] = ("assignment", p[2], p[4])
-        elif len(p) == 7:
+        else:
+            print("Declaração identificada: ", p[2])
+            self.names[p[2]] = None
             p[0] = ("declare", p[1], p[2])
 
     def p_parentheses(self, p):
@@ -116,32 +142,55 @@ class EmojiParser:
     def p_bloco(self, p):
         """bloco : LBRACE comando RBRACE
         | LBRACE RBRACE"""
+        print("Bloco identificado")
         if len(p) == 4:
             p[0] = [2]
 
     # Condicional
     def p_if_statement(self, p):
         """if_statement : IF LPAREN valor RPAREN LBRACE bloco RBRACE"""
+        print("Condicional identificado")
         p[0] = ("if", p[3], p[6])
 
     # Loop while
     def p_while_statement(self, p):
         """while_statement : WHILE LPAREN valor RPAREN LBRACE bloco RBRACE"""
+        print("Loop while identificado")
         p[0] = ("while", p[3], p[6])
 
     def p_for_statement(self, p):
-        """for_statement : FOR LPAREN assignment_or_declaration_or_value SEMICOLON assignment_or_value SEMICOLON assignment_or_value RPAREN comando"""
+        """for_statement : FOR LPAREN for_init SEMICOLON for_condition SEMICOLON for_update RPAREN comando"""
+        print("Loop for identificado")
         p[0] = ("for", p[3], p[5], p[7], p[9])
 
-    def p_assignment_or_declaration_or_value(self, p):
-        """assignment_or_declaration_or_value : assignment
+    def p_for_init(self, p):
+        """for_init : assignment
         | declaration
-        | valor"""
+        | valor
+        | empty
+        | valor for_init_comma
+        | declaration for_init_comma
+        """
         p[0] = p[1]
 
-    def p_assignment_or_value(self, p):
-        """assignment_or_value : assignment
-        | valor"""
+    def p_for_init_comma(self, p):
+        """for_init_comma : COMMA assignment
+        | COMMA assignment for_init_comma"""
+        if len(p) == 3:
+            p[0] = p[2]
+        else:
+            p[0] = (p[2], p[3])
+
+    def p_for_condition(self, p):
+        """for_condition : assignment
+        | valor
+        | empty"""
+        p[0] = p[1]
+
+    def p_for_update(self, p):
+        """for_update : assignment
+        | valor
+        | empty"""
         p[0] = p[1]
 
     # Leitura de entrada
@@ -157,17 +206,24 @@ class EmojiParser:
     # Interrupção de loop
     def p_break_statement(self, p):
         """break_statement : BREAK SEMICOLON"""
+        print("Break identificado")
         p[0] = ("break",)
 
     # Continuação de loop
     def p_continue_statement(self, p):
         """continue_statement : CONTINUE SEMICOLON"""
+        print("Continue identificado")
         p[0] = ("continue",)
 
     # Retorno de valor
     def p_return_statement(self, p):
         """return_statement : RETURN valor SEMICOLON"""
+        print("Return identificado")
         p[0] = ("return", p[2])
+
+    def p_empty(self, p):
+        "empty :"
+        pass
 
     # Erro de sintaxe
     def p_error(self, p):
