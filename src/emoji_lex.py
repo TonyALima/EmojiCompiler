@@ -124,6 +124,7 @@ class EmojiLexer:
 
     # Test it output
     def test(self, data: str) -> None:
+        print("/" + 10 * "-" + "Analise Lexica" + 10 * "-" + "/")
         self.lexer.input(data)
         for tok in self.lexer:
             print(tok.type, tok.value, tok.lineno, tok.lexpos)
@@ -146,6 +147,10 @@ if __name__ == "__main__":
         "☁ pi 🟰 3💥141592654❣",
         "🐃 b 🟰 👍",
         "🔤 a 🟰 🙏_🙏",
+        """🍀 🤜 ℹ️i🟰0 ❣ i 🤏 10 ❣ i 🟰 i ➕ 1 🤛 
+            👉
+                
+            👈""",
     ]
 
     for code in data:
