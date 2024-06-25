@@ -1,6 +1,3 @@
-import json
-
-
 def traduzir_comando(comando):
     if "DECLARAÇÃO" in comando:
         return traduzir_declaracao(comando["DECLARAÇÃO"])
@@ -22,13 +19,15 @@ def traduzir_comando(comando):
 def traduzir_declaracao(declaracao):
     comandos = []
     for dec in declaracao[0]:
-        if dec["type"] == "int":
-            comandos.append(f"{dec['nome']} = {dec['valor']}")
-    return "\n".join(comandos)
+        val = dec["valor"]
+        if type(val) == dict:
+            val = traduzir_operacao(val)
+        comandos.append(f"{dec['nome']}: {dec['type']}" + f" = {val}")
+    return "\n    ".join(comandos)
 
 
 def traduzir_printf(printf):
-    return f'print("{printf["valor"]}")'
+    return f'print({printf["valor"]})'
 
 
 def traduzir_scanf(scanf):
@@ -88,51 +87,3 @@ def traduzir_estrutura(estrutura):
             f"def main():\n{bloco_traduzido}\n\nif __name__ == '__main__':\n    main()"
         )
     return ""
-
-
-def main():
-    estrutura = {
-        "MAIN": {
-            "BLOCO": [
-                {
-                    "COMANDO": {
-                        "DECLARAÇÃO": [[{"nome": "a", "type": "int", "valor": 0}]]
-                    }
-                },
-                {"COMANDO": {"printf": {"valor": "digite um numero = "}}},
-                {"COMANDO": {"scanf": {"nome": "a"}}},
-                {
-                    "COMANDO": {
-                        "if": {
-                            "valor": {
-                                "OPERAÇÃO": {
-                                    "valor1": "a",
-                                    "op": "%",
-                                    "valor2": {
-                                        "OPERAÇÃO": {
-                                            "valor1": 2,
-                                            "op": "==",
-                                            "valor2": 0,
-                                        }
-                                    },
-                                }
-                            },
-                            "bloco": {
-                                "BLOCO": [{"COMANDO": {"printf": {"valor": "eh par"}}}]
-                            },
-                        }
-                    }
-                },
-                {"COMANDO": {"return": {"valor": 0}}},
-            ]
-        }
-    }
-
-    codigo_python = traduzir_estrutura(estrutura)
-
-    with open("saida.py", "w") as arquivo:
-        arquivo.write(codigo_python)
-
-
-if __name__ == "__main__":
-    main()
