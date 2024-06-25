@@ -108,7 +108,7 @@ class EmojiLexer:
         return t
 
     def t_CHARACTER(self, t: lex.LexToken):
-        r"🙏([^\\\n]|(\\.))*?🙏"
+        r"🙏([^🙏])*🙏"
         t.value = t.value[1:-1]  # Remova as aspas simples
         return t
 
