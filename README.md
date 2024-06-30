@@ -172,7 +172,16 @@ Também é possivel colocar manualmente o código a ser intepretado na variavel 
 
 A execução do arquivo demonstrará a Analise lexica, sintática e a tradução do código para o código em linguagem C, a compilação do mesmo assim como a execução em um terminal separado de forma automatica, caso não haja erros. O executavel e o arquivo C serão gerados no diretorio [out](out)
 
-Para a implementação da Analise léxica e sintatica utilizamos a biblioteca [ply](https://ply.readthedocs.io/en/latest/ply.html#) em python
+Para a implementação da Analise léxica e sintatica utilizamos a biblioteca [ply](https://ply.readthedocs.io/en/latest/ply.html#) em python.
+
+Essa é a unica biblioteca externa a ser instalada e pode ser obtida pela ferramenta pip
+```bash
+pip install -r requirements.txt
+```
+ou de forma mais direta
+```bash
+pip install ply==3.11
+```
 
 - [Analise Léxica](src/emoji_lex.py): Fará o reconhecimento de todos simbolos definidos, utilizando o modulo [ply.lex](https://ply.readthedocs.io/en/latest/ply.html#lex)
 - [Analise Sintatica](src/emoji_parser.py): Fará o uso das regras, automatos definidos para reconhecer e aceitar a sintaxe da linguagem. Demonstrará de forma hierarquica todas as estuturas reconhecidas, caso não haja erros de sintaxe. Foi utilizado o modulo [ply.yacc](https://ply.readthedocs.io/en/latest/ply.html#yacc), este que gera os arquivos [parser.out](out/parser.out) e [parsertab.py](out/parsetab.py), que configuram os estados das regras e configurações da biblioteca para interpretar nossa solução.
