@@ -214,8 +214,5 @@ Para demonstrar o uso da linguagem foram criados alguns exemplos de códigos. To
 
   
 
-
-
-
-
+https://github.com/samuellimabraz/EmojiCompiler/assets/115582014/073086a8-6e47-4af8-9605-f875e53150a9
 
