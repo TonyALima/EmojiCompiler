@@ -94,7 +94,7 @@ class EmojiLexer:
     t_CONTINUE = r"✅"
     t_RETURN = r"🔄"
     t_MAIN = r"👨"
-    t_NOME = r"[a-z]([0-9]||[a-z])*"
+    t_NOME = r"[a-z]+([0-9]||[a-z])*"
 
     # Regra para ignorar espaços e tabulações
     t_ignore = " \t"
@@ -124,7 +124,6 @@ class EmojiLexer:
 
     # Test it output
     def test(self, data: str) -> None:
-        print("/" + 10 * "-" + "Analise Lexica" + 10 * "-" + "/")
         self.lexer.input(data)
         for tok in self.lexer:
             print(tok.type, tok.value, tok.lineno, tok.lexpos)

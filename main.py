@@ -1,41 +1,30 @@
+import sys
+
 from src.emoji_parser import EmojiParser
-from src.translate import traduzir_estrutura
+from src.gcc_translate import Translator
 
 
-def print_hierarchical_dict(d, level=0):
-    indent = "    " * level
-    if isinstance(d, dict):
-        for key, value in d.items():
-            print(f"{indent}{key}:")
-            if isinstance(value, (dict, list)):
-                print_hierarchical_dict(value, level + 1)
-            else:
-                print(f"{indent}    {value}")
-    elif isinstance(d, list):
-        for item in d:
-            print_hierarchical_dict(item, level)
-    else:
-        print(f"{indent}{d}")
-
-
-def main() -> None:
+def main():
     parser = EmojiParser()
+    translator = Translator()
 
-    with open("data/volumeEsfera.emo", "r") as file:
-        codigo = file.read()
+    codigo: str = ""
+    output: str = "output"
 
+    if len(sys.argv) >= 2:
+        with open(sys.argv[1], "r") as file:
+            codigo = file.read()
+        if len(sys.argv) == 3:
+            output = sys.argv[2]
+    else:
+        print("Usage python main.py <file.emo> [<output_name>]")
+
+    print("/" + 10 * "-" + "Analise Lexica" + 10 * "-" + "/\n")
     parser.lexer.test(codigo)
-    r = parser.parse(codigo)
-    print(r)
-    print_hierarchical_dict(r, 0)
-
-    print("/" + 10 * "-" + "Código python" + 10 * "-" + "/")
-    codigo_python = traduzir_estrutura(r)
-
-    print(codigo_python)
-
-    with open("saida.py", "w") as arquivo:
-        arquivo.write(codigo_python)
+    print("/" + 10 * "-" + "Analise Sintatica" + 10 * "-" + "/\n")
+    r = parser.parse(codigo, True)
+    print("/" + 10 * "-" + "Tradução" + 10 * "-" + "/\n")
+    translator.translate(codigo, name=output, execute=True)
 
 
 if __name__ == "__main__":
