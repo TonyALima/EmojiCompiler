@@ -45,14 +45,32 @@ class EmojiParser:
 
     def __init__(self):
         self.lexer = EmojiLexer()
-        self.parser = yacc.yacc(module=self, debug=True)
+        self.parser = yacc.yacc(module=self, debug=True, outputdir="out")
         self.current_type_declaration = None
         self.commands = []
 
-    def parse(self, data):
-        print("/" + 10 * "-" + "Analise Sintatica" + 10 * "-" + "/")
+    def print_hierarchical_dict(self, d, level=0):
+        indent = "    " * level
+        if isinstance(d, dict):
+            for key, value in d.items():
+                print(f"{indent}{key}:")
+                if isinstance(value, (dict, list)):
+                    self.print_hierarchical_dict(
+                        value, level + 1
+                    )  # Added 'self' prefix
+                else:
+                    print(f"{indent}    {value}")
+        elif isinstance(d, list):
+            for item in d:
+                self.print_hierarchical_dict(item, level)  # Added 'self' prefix
+        else:
+            print(f"{indent}{d}")
 
-        return self.parser.parse(data, lexer=self.lexer.lexer)
+    def parse(self, data, print_tree: bool = False):
+        r = self.parser.parse(data, lexer=self.lexer.lexer)
+        if print_tree:
+            self.print_hierarchical_dict(r, 0)
+        return r
 
     def p_program(self, p: Production) -> None:
         """program : INT MAIN LPAREN RPAREN bloco"""
@@ -68,7 +86,7 @@ class EmojiParser:
 
     def p_comando(self, p: Production) -> None:
         """comando : declaration
-        | assignment
+        | assignment SEMICOLON
         | if_statement
         | while_statement
         | for_statement
@@ -138,8 +156,17 @@ class EmojiParser:
         | CHARACTER
         | boolean
         | operation
-        | parentheses"""
+        | parentheses
+        | sinal valor"""
         p[0] = p[1]
+
+    def p_valores(self, p: Production) -> None:
+        """valores : valor
+        | valor COMMA valores"""
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[0] = [p[1]] + p[3]
 
     def p_operation(self, p: Production) -> None:
         """
@@ -201,7 +228,7 @@ class EmojiParser:
 
     def p_while_statement(self, p: Production) -> None:
         """while_statement : WHILE LPAREN valor RPAREN bloco"""
-        p[0] = {"while": {"valor": p[3], "bloco": p[6]}}
+        p[0] = {"while": {"valor": p[3], "bloco": p[5]}}
 
     def p_for_statement(self, p: Production) -> None:
         """for_statement : FOR LPAREN for_init SEMICOLON for_condition SEMICOLON for_update RPAREN comando"""
@@ -256,13 +283,17 @@ class EmojiParser:
 
     # Leitura de entrada
     def p_scanf_statement(self, p: Production) -> None:
-        """scanf_statement : SCANF LPAREN NOME RPAREN SEMICOLON"""
-        p[0] = {"scanf": {"nome": p[3]}}
+        """scanf_statement : SCANF LPAREN CHARACTER COMMA NOME RPAREN SEMICOLON"""
+        p[0] = {"scanf": {"nome": p[5]}}
 
     # Impressão
     def p_printf_statement(self, p: Production) -> None:
-        """printf_statement : PRINTF LPAREN valor RPAREN SEMICOLON"""
-        p[0] = {"printf": {"valor": p[3]}}
+        """printf_statement : PRINTF LPAREN CHARACTER COMMA valores RPAREN SEMICOLON
+        | PRINTF LPAREN CHARACTER RPAREN SEMICOLON"""
+        if len(p) == 8:
+            p[0] = {"printf": {"mensagem": p[3], "valor": p[5]}}
+        else:
+            p[0] = {"printf": {"mensagem": p[3]}}
 
     # Interrupção de loop
     def p_break_statement(self, p: Production) -> None:
